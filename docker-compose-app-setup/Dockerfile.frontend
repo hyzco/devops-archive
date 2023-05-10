@@ -1,0 +1,44 @@
+FROM node:14
+
+WORKDIR /app
+
+# to be able to execute nc command 
+RUN apt-get update && apt-get install -y netcat
+
+# Install Git
+RUN apt-get update && apt-get install -y git
+
+# Set Git credentials as build arguments
+ARG GIT_USERNAME
+ARG GIT_PAT
+
+# Clone the application code from the Git repository
+RUN git clone https://$GIT_USERNAME:$GIT_PAT@github.com/hyzco/UI.git . 
+
+# Copy package.json and package-lock.json
+COPY package*.json ./
+RUN mv .env-copy .env
+
+# Install dependencies
+RUN yarn install 
+RUN yarn build
+
+# Expose port 3000
+EXPOSE 3000
+
+# # Set environment variables
+# ENV NODE_ENV production
+# ENV DB_HOST mysql
+# ENV DB_USER root
+# ENV DB_PASSWORD password
+# ENV DB_NAME mydatabase
+# ENV REDIS_HOST redis
+ENV API_SRV_PROTOCOL http
+ENV API_SRV localhost
+ENV API_SRV_PORT 3000
+
+
+# Start the application
+CMD [ "yarn", "start" ]
+
+##TODO: Check env variables - add mechanism that adds docker env variables to .env file - or another way 

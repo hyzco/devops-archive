@@ -1,0 +1,5 @@
+vsphere_vcenter = ""
+vsphere_user = ""
+vsphere_password = ""
+vsphere_datacenter = "Cloudx VC-01"
+vsphere_cluster = "VC-01-Cluster-01"
